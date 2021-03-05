@@ -1,0 +1,7 @@
+#!/bin/bash
+
+python manage.py makemigrations
+python manage.py migrate
+apt update
+apt install -y ffmpeg
+python manage.py runserver 0.0.0.0:8000 --noreload

@@ -1,0 +1,25 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                sh 'ls'
+                dir('frontend'){
+                    sh 'ls'
+                    script{
+                        try {
+                            sh 'npm i'
+                            sh 'npm run build'
+                            sh 'sudo rm -rf /var/www/html/dist'
+                            sh 'sudo mv dist/ /var/www/html/dist'
+                            mattermostSend color: '#f5d90a', icon: "https://jenkins.io/images/logos/jenkins/jenkins.png", message: "빌드 성공: ${env.JOB_NAME} ${env.BUILD_NUMBER}"
+                        }catch(e){
+                            mattermostSend color: '#ff0000', icon: "https://jenkins.io/images/logos/jenkins/jenkins.png", message: "Front 빌드 실패: ${env.JOB_NAME} ${env.BUILD_NUMBER} ${e}"
+                        }
+                    }
+                }
+            }
+        }
+    }  
+}
